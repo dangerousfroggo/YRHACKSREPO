@@ -13,19 +13,54 @@ stream = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frame
 player = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, output=True, frames_per_buffer=CHUNK)
 
 
+
+
 class Distortion:
     def __init__(self, type, volume, gain, enabled):
-        self.type = type
-        self.volume = volume
-        self.gain = gain
-        self.enabled = enabled
-    def process():
+        self.type = type            # 3
+        self.volume = volume        # 0.0 to 1.0
+        self.gain = gain            # 0.0 to 1.0
+        self.enabled = enabled      # True or False
+
+    def process(self, samples):
+        if not self.enabled:
+            return samples
+        
+        # Apply gain to amplify the input
+        amplified = samples * (1.0 + self.gain * 10)
+
+        # Hard clipping
+        clipped = np.clip(amplified, -32768, 32767)
+
+        # Blend with original if dry/wet mix
+        if self.type == 0:  # wet mix
+            mixed = clipped * self.volume * 10 + samples * (1 - self.volume)
+        elif self.type == 1:  # dry only (just original)
+            mixed = samples
+        else:
+            mixed = clipped
+        
+        # Apply additional gain to the processed output
+        final_output = np.clip(mixed * GAIN, -32768, 32767)  # Loudness boost
+
+        return final_output.astype(np.int16)
+class Clean:
+    def process(self,samples):
+        return samples
+clean1 = Clean()
+
+        
+
+
+
+distortion1 = Distortion(1, 1, 10, True)
 
         
     
+currentEffect = distortion1
 
 
-for i in range(int(LEN * RATE / CHUNK)):  # Go for LEN seconds
+for i in range(int(LEN * RATE / CHUNK)):
     data = np.frombuffer(stream.read(CHUNK, exception_on_overflow=False), dtype=np.int16)
 
     data = currentEffect.process(data)  # 👈 Apply distortion here
