@@ -9,8 +9,12 @@ export function ChorusBox() {
     const [chorusRate, setChorusRate] = useState(0);
     const [chorusDepth, setChorusDepth] = useState(0);
 
+    // chorus button state
+    const [chorusButtonState, setChorusButtonState] = useState(false);
+
     const startChorus = async () => {
-        // setChorusButtonState(!ChorusButtonState)
+        setChorusButtonState(!chorusButtonState)
+        console.log(chorusLevel, chorusRate, chorusDepth)
         const query = new URLSearchParams({
             chorusLevel,
             chorusRate,
@@ -27,10 +31,28 @@ export function ChorusBox() {
         }
     }; 
 
+    const stopChorus = async () => {
+        setChorusButtonState(!chorusButtonState)
+        try {
+          const res = await fetch("http://localhost:8000/stop-distortion");
+          const json = await res.json();
+          console.log("STOPPED:", json);
+        } catch (err) {
+          console.error("Failed to stop distortion:", err);
+        }
+    };
+
     return(
         <>
             <div>Chorus</div>
-            <ChorusSliders />
+            <button onClick={chorusButtonState ? stopChorus : startChorus}>
+                {chorusButtonState ? "Stop" : "Start"} Chorus
+            </button>
+            <ChorusSliders 
+                setChorusLevel={setChorusLevel}
+                setChorusRate={setChorusRate}
+                setChorusDepth={setChorusDepth}
+            />
         </>
     )
 }

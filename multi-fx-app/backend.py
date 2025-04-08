@@ -25,6 +25,7 @@ async def start_effects(request: Request):
     args = []
 
     for key, value in query_params.items():
+        print(value)
         args.append(f"--{key}")
         args.append(value)
 
