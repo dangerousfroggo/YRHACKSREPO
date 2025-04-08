@@ -14,11 +14,10 @@ LEN = 50
 GAIN = 8.0  # Volume multiplier
 MAX_DISTORTION = 8000  # Threshold for clipping distortion
 
-# Effects Variables
 parser = argparse.ArgumentParser()
 # Distortion
-parser.add_argument("--volume", type=int, default=1)
-parser.add_argument("--gain", type=int, default=1)
+parser.add_argument("--volume", type=int, default=0)
+parser.add_argument("--gain", type=int, default=0)
 parser.add_argument("--wetDry", type=int, default=0)
 parser.add_argument("--enableDistortion", type=str, default="false")
 
@@ -28,7 +27,17 @@ parser.add_argument("--chorusRate", type=int, default=0)
 parser.add_argument("--chorusDepth", type=int, default=0)
 parser.add_argument("--enableChorus", type=str, default="false")
 
+# Delay
+parser.add_argument("--delayLevel", type=int, default=0)
+parser.add_argument("--feedback", type=int, default=0)
+parser.add_argument("--delay", type=int, default=0)
+parser.add_argument("--enableDelay", type=str, default="false")
+
 args = parser.parse_args()
+
+use_distortion = args.enableDistortion.lower() == "true"
+use_chorus = args.enableChorus.lower() == "true"
+use_delay = args.enableDelay.lower() == "true"
 
 # Initialize PyAudio
 p = pyaudio.PyAudio()
