@@ -20,7 +20,7 @@ class Distortion:
         self.volume = volume
         self.gain = gain
         self.enabled = enabled
-    def process()
+    def process():
 
         
     
