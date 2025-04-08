@@ -3,6 +3,12 @@ import React from 'react'
 import { DistortionSliders } from './DistortionSliders'
 
 export function DistortionBox() {
+    // distortion slider states
+    const [distortionVolume, setDistortionVolume] = useState(1);
+    const [distortionGain, setDistortionGain] = useState(1);
+    const [distortionWetDry, setDistortionWetDry] = useState(0);
+
+
     const startDistortion = async () => {
         var volume = 5;     // You can make this dynamic later
         var gain = 5;  // Or controlled via a slider
