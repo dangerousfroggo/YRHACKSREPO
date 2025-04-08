@@ -63,7 +63,7 @@ currentEffect = distortion1
 for i in range(int(LEN * RATE / CHUNK)):
     data = np.frombuffer(stream.read(CHUNK, exception_on_overflow=False), dtype=np.int16)
 
-    data = currentEffect.process(data)  # 👈 Apply distortion here
+    data = currentEffect.process(data) 
 
     player.write(data.tobytes(), CHUNK)
 
