@@ -21,11 +21,10 @@ def read_root():
     return {"message": "Backend is running"}
 
 @app.get("/start-distortion")
-def start_distortion():
-    print("hellooooo")
+def start_distortion(volume: int = 1, gain: int = 1, wetOrDry: int = 1):
     try:
-        # calls main.py - file with sound effects
-        subprocess.Popen(["python3", "main.py"])  # Run asynchronously
+        print(f"Starting distortion with VOL={volume}, GAIN={gain}, WET_OR_DRY={wetOrDry}")
+        subprocess.Popen(["python3", "main.py", str(volume), str(gain), str(wetOrDry)])
         return JSONResponse(content={"status": "started"}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)

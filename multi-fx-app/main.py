@@ -1,7 +1,8 @@
+import sys
 import pyaudio
 import numpy as np
 import psutil, os
-psutil.Process(os.getpid()).nice(psutil.HIGH_PRIORITY_CLASS)
+# psutil.Process(os.getpid()).nice(psutil.HIGH_PRIORITY_CLASS)
 
 CHUNK = 3
 RATE = 96000
@@ -14,6 +15,13 @@ player = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, output=True, fram
 
 currentEffect = None
 
+# Default values
+VOL = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+GAIN = int(sys.argv[2]) if len(sys.argv) > 2 else 1
+WET_OR_DRY = int(sys.argv[3]) if len(sys.argv) > 3 else 1
+
+print(f"Starting distortion with VOL={VOL}, GAIN={GAIN}, WET_OR_DRY={WET_OR_DRY}")
+
 class Distortion:
     def __init__(self, type, volume, gain, enabled):
         self.type = type
@@ -23,7 +31,7 @@ class Distortion:
     def process():
         pass
 
-distortion1 = Distortion("distortion", 0.5, 0.5, True)
+distortion1 = Distortion("distortion", VOL, GAIN, WET_OR_DRY)
 
         
     
