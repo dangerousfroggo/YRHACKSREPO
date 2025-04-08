@@ -1,3 +1,4 @@
+import sys
 import pyaudio
 import numpy as np
 import psutil, os
@@ -12,7 +13,11 @@ p = pyaudio.PyAudio()
 stream = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK)
 player = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, output=True, frames_per_buffer=CHUNK)
 
+VOL = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+GAIN = int(sys.argv[2]) if len(sys.argv) > 2 else 1
+WET_OR_DRY = int(sys.argv[3]) if len(sys.argv) > 3 else 1
 
+print(f"Starting distortion with VOL={VOL}, GAIN={GAIN}, WET_OR_DRY={WET_OR_DRY}")
 
 
 class Distortion:
