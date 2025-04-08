@@ -1,11 +1,14 @@
 import React from "react"
 import { useState } from "react"
 
-export function ChorusLevelSlider() {
+export function ChorusLevelSlider({
+    setChorusLevel
+}) {
     const [data, setData]=useState(0)
 
     function handleSlider(e){
         setData(e.target.value)
+        setChorusLevel(e.target.value)
     }
     
     
@@ -13,7 +16,7 @@ export function ChorusLevelSlider() {
         <>
             <div>
                 <input 
-                    type='range' min='0' max='100' 
+                    type='range' min='0' max='10' 
                     step='1' value={data} 
                     onChange={handleSlider}
                 />

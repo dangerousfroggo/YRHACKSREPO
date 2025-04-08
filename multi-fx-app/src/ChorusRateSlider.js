@@ -1,18 +1,21 @@
 import React from "react";
 import { useState } from "react"
 
-export function ChorusRateSlider(){
+export function ChorusRateSlider({
+    setChorusRate
+}){
     const [data, setData]=useState(0)
 
     function handleSlider(e){
         setData(e.target.value)
+        setChorusRate(e.target.value)
     }
     
     return(
         <>
             <div>
                 <input 
-                    type='range' min='0' max='100' 
+                    type='range' min='0' max='10' 
                     step='1' value={data} 
                     onChange={handleSlider}
                 />

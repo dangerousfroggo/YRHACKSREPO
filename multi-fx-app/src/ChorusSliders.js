@@ -4,13 +4,23 @@ import {ChorusLevelSlider} from "./ChorusLevelSlider"
 import {ChorusRateSlider} from "./ChorusRateSlider"
 import {ChorusDepthSlider} from "./ChorusDepthSlider"
 
-export function ChorusSliders() {
+export function ChorusSliders({
+    setChorusLevel,
+    setChorusRate,
+    setChorusDepth
+}) {
     return(
         <>
             <div>
-                <ChorusLevelSlider />
-                <ChorusRateSlider />
-                <ChorusDepthSlider/>
+                <ChorusLevelSlider 
+                    setChorusLevel={setChorusLevel}
+                />
+                <ChorusRateSlider 
+                    setChorusRate={setChorusRate}
+                />
+                <ChorusDepthSlider
+                    setChorusDepth={setChorusDepth}
+                />
             </div>
         </>
     )
