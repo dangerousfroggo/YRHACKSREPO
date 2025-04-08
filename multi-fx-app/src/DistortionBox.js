@@ -15,15 +15,22 @@ export function DistortionBox() {
 
     const startDistortion = async () => {
         setDistortionButtonState(!distortionButtonState)
+        
+        const query = new URLSearchParams({
+            volume: distortionVolume,
+            gain: distortionGain,
+            wetDry: distortionWetDry,
+            enableDistortion: true,
+        }).toString();
+    
         try {
-            const res = await fetch(
-                `http://localhost:8000/start-distortion?volume=${distortionVolume}&gain=${distortionGain}&wetOrDry=${distortionWetDry}`
-            );          
+            const res = await fetch(`http://localhost:8000/start-effects?${query}`);
             const json = await res.json();
             console.log("Distortion started:", json);
         } catch (err) {
             console.error("Failed to start distortion:", err);
         }
+        
     }; 
 
     const stopDistortion = async () => {

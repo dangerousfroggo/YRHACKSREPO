@@ -1,81 +1,71 @@
-import sys
+import argparse
 import pyaudio
 import numpy as np
 import psutil, os
+
+# Boost the process priority
 psutil.Process(os.getpid()).nice(psutil.HIGH_PRIORITY_CLASS)
 
-CHUNK = 3
-RATE = 96000
-LEN = 100
-GAIN = 20.0  
+# Constants
+CHUNK = 1
+RATE = 44100
+LEN = 50
+GAIN = 8.0  # Volume multiplier
+MAX_DISTORTION = 20000  # Threshold for clipping distortion
+
+# Effects Variables
+parser = argparse.ArgumentParser()
+# Distortion
+parser.add_argument("--volume", type=int, default=1)
+parser.add_argument("--gain", type=int, default=1)
+parser.add_argument("--wetDry", type=int, default=0)
+parser.add_argument("--enableDistortion", type=str, default="false")
+
+# Chorus
+parser.add_argument("--chorusLevel", type=int, default=0)
+parser.add_argument("--chorusRate", type=int, default=0)
+parser.add_argument("--chorusDepth", type=int, default=0)
+parser.add_argument("--enableChorus", type=str, default="false")
+
+args = parser.parse_args()
+
+# Initialize PyAudio
 p = pyaudio.PyAudio()
 
+# Open input and output streams
 stream = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK)
 player = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, output=True, frames_per_buffer=CHUNK)
 
-VOL = int(sys.argv[1]) if len(sys.argv) > 1 else 1
-GAIN = int(sys.argv[2]) if len(sys.argv) > 2 else 1
-WET_OR_DRY = int(sys.argv[3]) if len(sys.argv) > 3 else 1
+# Set the initial effect (can be changed to 'distortion' for distortion effect)
+currentEffect = 'distortion'
 
-print(f"Starting distortion with VOL={VOL}, GAIN={GAIN}, WET_OR_DRY={WET_OR_DRY}")
+# Function to apply the clean effect (just pass-through)
+def clean_effect(data):
+    return data
 
+# Function to apply distortion effect
+def distortion_effect(data):
+    # Apply gain and clip to simulate distortion
+    distorted = np.clip(data * GAIN, -MAX_DISTORTION, MAX_DISTORTION)
+    return distorted.astype(np.int16)
 
-class Distortion:
-    def __init__(self, type, volume, gain, enabled):
-        self.type = type            # 3
-        self.volume = volume        # 0.0 to 1.0
-        self.gain = gain            # 0.0 to 1.0
-        self.enabled = enabled      # True or False
-
-    def process(self, samples):
-        if not self.enabled:
-            return samples
-        
-        # Apply gain to amplify the input
-        amplified = samples * (1.0 + self.gain * 10)
-
-        # Hard clipping
-        clipped = np.clip(amplified, -32768, 32767)
-
-        # Blend with original if dry/wet mix
-        if self.type == 0:  # wet mix
-            mixed = clipped * self.volume * 10 + samples * (1 - self.volume)
-        elif self.type == 1:  # dry only (just original)
-            mixed = samples
-        else:
-            mixed = clipped
-        
-        # Apply additional gain to the processed output
-        final_output = np.clip(mixed * GAIN, -32768, 32767)  # Loudness boost
-
-        return final_output.astype(np.int16)
-class Clean:
-    def process(self,samples):
-        return samples
-clean1 = Clean()
-
-        
-
-
-
-distortion1 = Distortion(1, 1, 10, True)
-
-        
-    
-currentEffect = distortion1
-
-
-for i in range(int(LEN * RATE / CHUNK)):
+# Main loop for audio processing
+for i in range(int(LEN * RATE / CHUNK)):  # Go for LEN seconds
+    # Read data from input stream
     data = np.frombuffer(stream.read(CHUNK, exception_on_overflow=False), dtype=np.int16)
+    
+    # Apply the selected effect
+    if currentEffect == 'clean':
+        output_data = clean_effect(data)
+    elif currentEffect == 'distortion':
+        output_data = distortion_effect(data)
+    
+    # Write the processed audio data to the output stream
+    player.write(output_data.tobytes(), CHUNK)
 
-    data = currentEffect.process(data) 
-
-    player.write(data.tobytes(), CHUNK)
-
+# Clean up and close streams
 stream.stop_stream()
 stream.close()
 player.stop_stream()
 player.close()
 p.terminate()
-
-# hi
