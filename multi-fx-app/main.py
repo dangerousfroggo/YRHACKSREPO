@@ -2,6 +2,7 @@ import argparse
 import pyaudio
 import numpy as np
 import psutil, os
+import collections
 
 # Boost the process priority
 psutil.Process(os.getpid()).nice(psutil.HIGH_PRIORITY_CLASS)
@@ -11,7 +12,7 @@ CHUNK = 1
 RATE = 44100
 LEN = 50
 GAIN = 8.0  # Volume multiplier
-MAX_DISTORTION = 20000  # Threshold for clipping distortion
+MAX_DISTORTION = 8000  # Threshold for clipping distortion
 
 # Effects Variables
 parser = argparse.ArgumentParser()
@@ -48,7 +49,10 @@ def distortion_effect(data):
     # Apply gain and clip to simulate distortion
     distorted = np.clip(data * GAIN, -MAX_DISTORTION, MAX_DISTORTION)
     return distorted.astype(np.int16)
-
+def delay_effect(data):
+    pass
+def chorus_effect(data):
+    pass
 # Main loop for audio processing
 for i in range(int(LEN * RATE / CHUNK)):  # Go for LEN seconds
     # Read data from input stream
