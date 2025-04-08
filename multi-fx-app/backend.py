@@ -28,3 +28,23 @@ def start_distortion(distortionVolume: int = 1, distortionGain: int = 1, distort
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
     
+@app.get("/stop-distortion")
+def stop_distortion():
+    global process
+    try:
+        if process and process.poll() is None:
+            process.terminate()
+            process = None
+            return JSONResponse(content={"status": "stopped"}, status_code=200)
+        else:
+            return JSONResponse(content={"status": "not running"}, status_code=400)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+    
+@app.get("/start-chorus")
+def start_chorus(chorusLevel: int = 1, chorusRate: int = 1, chorusDepth: int = 1):
+    try:
+        subprocess.Popen(["python3", "main.py", str(chorusLevel), str(chorusRate), str(chorusDepth)])
+        return JSONResponse(content={"status": "started"}, status_code=200)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)

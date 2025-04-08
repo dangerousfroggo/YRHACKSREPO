@@ -9,8 +9,12 @@ export function DistortionBox() {
     const [distortionGain, setDistortionGain] = useState(0);
     const [distortionWetDry, setDistortionWetDry] = useState(0);
 
+    // distortion button state
+    const [distortionButtonState, setDistortionButtonState] = useState(false);
+
 
     const startDistortion = async () => {
+        setDistortionButtonState(!distortionButtonState)
         try {
             const res = await fetch(
                 `http://localhost:8000/start-distortion?volume=${distortionVolume}&gain=${distortionGain}&wetOrDry=${distortionWetDry}`
@@ -20,14 +24,25 @@ export function DistortionBox() {
         } catch (err) {
             console.error("Failed to start distortion:", err);
         }
-      }; 
+    }; 
+
+    const stopDistortion = async () => {
+        setDistortionButtonState(!distortionButtonState)
+        try {
+          const res = await fetch("http://localhost:8000/stop-distortion");
+          const json = await res.json();
+          console.log("STOPPED:", json);
+        } catch (err) {
+          console.error("Failed to stop distortion:", err);
+        }
+    };
 
     return(
         <>
             <div>Distortion</div>
-            <button
-                onClick={startDistortion}
-            > Click for Distortion </button>
+            <button onClick={distortionButtonState ? stopDistortion : startDistortion}>
+                {distortionButtonState ? "Stop" : "Start"} Distortion
+            </button>
             <DistortionSliders
                 setDistortionVolume={setDistortionVolume}
                 setDistortionGain={setDistortionGain}
