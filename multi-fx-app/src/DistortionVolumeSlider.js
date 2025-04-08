@@ -1,21 +1,15 @@
 import React from "react"
 import { useState } from "react"
 
-export function DistortionVolumeSlider() {
-    
-    // function range(start, end, step=1){
-    // const result = [];
-    // for (let i = start; i<end; i++){
-    //     result.push(i);
-    // }
-    // return result
-    // }
-    // const pal = range(0, 101);
+export function DistortionVolumeSlider({
+    setDistortionVolume
+}) {
 
     const [data, setData]=useState(0)
 
     function handleSlider(e){
         setData(e.target.value)
+        setDistortionVolume(e.target.value)
     }
     
     
