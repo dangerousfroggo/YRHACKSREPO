@@ -1,11 +1,13 @@
 import React from "react"
 
+import { EffectBoxes } from "./EffectBoxes"
 
 export default function App() {
   
     return (
       <>
-        <button>+</button>
+        <h1>Multi Fx</h1>
+        <EffectBoxes />
       </>
     );
 }
