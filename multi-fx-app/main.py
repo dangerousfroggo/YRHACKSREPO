@@ -10,7 +10,7 @@ CHUNK = 1
 RATE = 44100
 LEN = 50
 GAIN = 8.0  # Volume multiplier
-MAX_DISTORTION = 5000  # Threshold for clipping distortion
+MAX_DISTORTION = 9000  # Threshold for clipping distortion
 
 # Initialize PyAudio
 p = pyaudio.PyAudio()
@@ -31,6 +31,10 @@ def distortion_effect(data):
     # Apply gain and clip to simulate distortion
     distorted = np.clip(data * GAIN, -MAX_DISTORTION, MAX_DISTORTION)
     return distorted.astype(np.int16)
+def chorus_effect(data):
+    pass
+def delay_effect(data):
+    pass
 
 # Main loop for audio processing
 for i in range(int(LEN * RATE / CHUNK)):  # Go for LEN seconds
