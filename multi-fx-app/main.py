@@ -7,7 +7,7 @@ import psutil, os
 CHUNK = 3
 RATE = 96000
 LEN = 100
-GAIN = 8.0  
+GAIN = 20.0  
 p = pyaudio.PyAudio()
 
 stream = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK)
@@ -22,6 +22,8 @@ WET_OR_DRY = int(sys.argv[3]) if len(sys.argv) > 3 else 1
 
 print(f"Starting distortion with VOL={VOL}, GAIN={GAIN}, WET_OR_DRY={WET_OR_DRY}")
 
+
+
 class Distortion:
     def __init__(self, type, volume, gain, enabled):
         self.type = type
@@ -35,16 +37,55 @@ distortion1 = Distortion("distortion", VOL, GAIN, WET_OR_DRY)
 
         
     
+        self.type = type            # 3
+        self.volume = volume        # 0.0 to 1.0
+        self.gain = gain            # 0.0 to 1.0
+        self.enabled = enabled      # True or False
+
+    def process(self, samples):
+        if not self.enabled:
+            return samples
+        
+        # Apply gain to amplify the input
+        amplified = samples * (1.0 + self.gain * 10)
+
+        # Hard clipping
+        clipped = np.clip(amplified, -32768, 32767)
+
+        # Blend with original if dry/wet mix
+        if self.type == 0:  # wet mix
+            mixed = clipped * self.volume * 10 + samples * (1 - self.volume)
+        elif self.type == 1:  # dry only (just original)
+            mixed = samples
+        else:
+            mixed = clipped
+        
+        # Apply additional gain to the processed output
+        final_output = np.clip(mixed * GAIN, -32768, 32767)  # Loudness boost
+
+        return final_output.astype(np.int16)
+class Clean:
+    def process(self,samples):
+        return samples
+clean1 = Clean()
+
+        
 
 
-for i in range(int(LEN * RATE / CHUNK)):  # Go for LEN seconds
+
+distortion1 = Distortion(1, 1, 10, True)
+
+        
+    
+currentEffect = distortion1
+
+
+for i in range(int(LEN * RATE / CHUNK)):
     data = np.frombuffer(stream.read(CHUNK, exception_on_overflow=False), dtype=np.int16)
 
-    
-    # Apply gain and clip to prevent coverflow
-    louder = np.clip(data * GAIN, -32768, 32767).astype(np.int16)
-    
-    player.write(louder.tobytes(), CHUNK)
+    data = currentEffect.process(data)  # 👈 Apply distortion here
+
+    player.write(data.tobytes(), CHUNK)
 
 stream.stop_stream()
 stream.close()
