@@ -1,16 +1,19 @@
 import React from 'react'
+import { useState } from 'react'
 
 import { DistortionSliders } from './DistortionSliders'
 
 export function DistortionBox() {
+    // distortion slider states
+    const [distortionVolume, setDistortionVolume] = useState(0);
+    const [distortionGain, setDistortionGain] = useState(0);
+    const [distortionWetDry, setDistortionWetDry] = useState(0);
+
+
     const startDistortion = async () => {
-        var volume = 5;     // You can make this dynamic later
-        var gain = 5;  // Or controlled via a slider
-        var wetOrDry = 1
-    
         try {
             const res = await fetch(
-                `http://localhost:8000/start-distortion?volume=${volume}&gain=${gain}&wetOrDry=${wetOrDry}`
+                `http://localhost:8000/start-distortion?volume=${distortionVolume}&gain=${distortionGain}&wetOrDry=${distortionWetDry}`
             );          
             const json = await res.json();
             console.log("Distortion started:", json);
@@ -25,7 +28,11 @@ export function DistortionBox() {
             <button
                 onClick={startDistortion}
             > Click for Distortion </button>
-            <DistortionSliders />
+            <DistortionSliders
+                setDistortionVolume={setDistortionVolume}
+                setDistortionGain={setDistortionGain}
+                setDistortionWetDry={setDistortionWetDry}
+            />
         </>
     )
 }
