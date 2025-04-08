@@ -1,11 +1,14 @@
 import React from "react"
 import { useState } from "react"
 
-export function DistortionGainSlider() {
+export function DistortionGainSlider({
+    setDistortionGain
+}) {
   const [data, setData]=useState(0)
 
     function handleSlider(e){
         setData(e.target.value)
+        setDistortionGain(e.target.value)
     }    
     return(
         <>

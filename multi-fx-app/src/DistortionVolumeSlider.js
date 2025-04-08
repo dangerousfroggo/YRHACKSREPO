@@ -1,9 +1,9 @@
 import React from "react"
 import { useState } from "react"
 
-export function DistortionVolumeSlider(
+export function DistortionVolumeSlider({
     setDistortionVolume
-) {
+}) {
 
     const [data, setData]=useState(0)
 

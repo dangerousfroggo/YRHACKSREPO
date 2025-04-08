@@ -1,11 +1,14 @@
 import React from "react"
 import { useState } from "react"
 
-export function DistortionWetDrySlider() {    
+export function DistortionWetDrySlider({
+    setDistortionWetDry
+}) {    
   const [data, setData]=useState(0)
 
     function handleSlider(e){
         setData(e.target.value)
+        setDistortionWetDry(e.target.value)
     }
     return(
         <>

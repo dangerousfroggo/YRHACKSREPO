@@ -5,11 +5,11 @@ import {DistortionGainSlider} from "./DistortionGainSlider"
 import {DistortionWetDrySlider} from "./DistortionWetDrySlider"
 
 
-export function DistortionSliders(
+export function DistortionSliders({
     setDistortionVolume,
     setDistortionGain,
     setDistortionWetDry
-) {
+}) {
     return(
         <>
             <div>

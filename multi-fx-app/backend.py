@@ -27,3 +27,4 @@ def start_distortion(distortionVolume: int = 1, distortionGain: int = 1, distort
         return JSONResponse(content={"status": "started"}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+    
