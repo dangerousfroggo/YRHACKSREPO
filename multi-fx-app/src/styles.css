@@ -1,4 +1,5 @@
 .effect-boxes {
-    display: inline-block;
+    border: 1px solid #ccc;
+    display: flex;
     gap: 10px;
 }

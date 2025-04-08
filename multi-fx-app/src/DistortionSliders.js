@@ -2,7 +2,7 @@ import React from "react"
 
 import {DistortionVolumeSlider} from "./DistortionVolumeSlider"
 import {DistortionGainSlider} from "./DistortionGainSlider"
-import {DistortionWetDry} from "./DistortionWetDry"
+import {DistortionWetDrySlider} from "./DistortionWetDrySlider"
 
 
 export function DistortionSliders() {
@@ -11,7 +11,7 @@ export function DistortionSliders() {
             <div>
                 <DistortionVolumeSlider />
                 <DistortionGainSlider />
-                <DistortionWetDry/>
+                <DistortionWetDrySlider/>
             </div>
         </>
     )
