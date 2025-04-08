@@ -34,11 +34,11 @@ export function ChorusBox() {
     const stopChorus = async () => {
         setChorusButtonState(!chorusButtonState)
         try {
-          const res = await fetch("http://localhost:8000/stop-distortion");
+          const res = await fetch("http://localhost:8000/stop-effects");
           const json = await res.json();
           console.log("STOPPED:", json);
         } catch (err) {
-          console.error("Failed to stop distortion:", err);
+          console.error("Failed to stop chorus:", err);
         }
     };
 

@@ -12,7 +12,6 @@ export function DistortionBox() {
     // distortion button state
     const [distortionButtonState, setDistortionButtonState] = useState(false);
 
-
     const startDistortion = async () => {
         setDistortionButtonState(!distortionButtonState)
         
@@ -30,13 +29,12 @@ export function DistortionBox() {
         } catch (err) {
             console.error("Failed to start distortion:", err);
         }
-        
     }; 
 
     const stopDistortion = async () => {
         setDistortionButtonState(!distortionButtonState)
         try {
-          const res = await fetch("http://localhost:8000/stop-distortion");
+          const res = await fetch("http://localhost:8000/stop-effects");
           const json = await res.json();
           console.log("STOPPED:", json);
         } catch (err) {
