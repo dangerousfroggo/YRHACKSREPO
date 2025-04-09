@@ -13,6 +13,7 @@ export function ChorusRateSlider({
     
     return(
         <>
+            <div>Rate for Chorus</div>
             <div>
                 <input 
                     type='range' min='0' max='10' 

@@ -14,6 +14,7 @@ export function DelayLevelSlider({
     
     return(
         <>
+            <div>Level for Delay</div>
             <div>
                 <input 
                     type='range' min='0' max='10' 

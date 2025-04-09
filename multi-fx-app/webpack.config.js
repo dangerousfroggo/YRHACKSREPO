@@ -4,20 +4,25 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
   entry: "./src/index.js",
   output: {
-    filename: "main.js",
     path: path.resolve(__dirname, "dist"),
-    clean: true,
+    filename: "main.js",
   },
   module: {
     rules: [
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
+        test: /\.(js|jsx)$/, // ✅ handles both .js and .jsx
         exclude: /node_modules/,
-        use: "babel-loader",
+        use: {
+          loader: "babel-loader",
+        },
       },
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: "asset/resource",
       },
     ],
   },
@@ -30,8 +35,10 @@ module.exports = {
     }),
   ],
   devServer: {
-    static: "./dist",
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
     port: 3000,
+    hot: true,
   },
-  mode: "development",
 };

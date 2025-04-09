@@ -14,6 +14,7 @@ export function DelayFeedbackSlider({
     
     return(
         <>
+            <div>Feedback for Delay</div>
             <div>
                 <input 
                     type='range' min='0' max='10' 

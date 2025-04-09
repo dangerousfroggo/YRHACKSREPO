@@ -14,6 +14,7 @@ export function ChorusDepthSlider({
     
     return(
         <>
+            <div>Depth for Chorus</div>
             <div>
                 <input 
                     type='range' min='0' max='10' 
